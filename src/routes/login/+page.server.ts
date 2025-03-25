@@ -43,6 +43,6 @@ export const actions = {
         returnObject.success=false;
         return fail(400, returnObject as any)
      }
-     redirect(303,"/private/dashboard");
+     //redirect(303,"/private/dashboard");
   },
 };

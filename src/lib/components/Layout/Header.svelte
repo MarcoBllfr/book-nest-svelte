@@ -1,20 +1,38 @@
 <script lang="ts">
     import bookNestLogo from "$assets/app-logo.svg";
   import { Button } from "$components";
+  import { getUserState } from "$components/state/user-state.svelte";
+
+let userContext = getUserState();
+let {user} = $derived(userContext);
+
 </script>
 <header>
+  
     <a href="/">
         <img class="logo" src={bookNestLogo} alt="Go to home">
     </a>
     <nav>
-        <ul>
-            <li>
-                <Button isMenu={true} href="/register"> Create account</Button>
-            </li>
-            <li>
-                <Button isMenu={true} isSecondary={true} href="/login">Login</Button>
-            </li>
-        </ul>
+      {#if !user}
+      <ul>
+        <li>
+            <Button isMenu={true} href="/register"> Create account</Button>
+        </li>
+        <li>
+            <Button isMenu={true} isSecondary={true} href="/login">Login</Button>
+        </li>
+    </ul>
+    {:else} 
+    <ul>
+      <li>
+        {user.email}
+      </li>
+      <li>
+        <Button isMenu={true} onclick={() => userContext.logout()}>Log Out</Button>
+      </li>
+    </ul>
+    {/if}
+       
     </nav>
 </header>
 <style>

@@ -1,6 +1,7 @@
 <script lang="ts">
 import heroImage from "$assets/hero.png";
   import { Button } from "$components";
+
 </script>
 <section class="default-margin hero">
     <div class="hero-text">
