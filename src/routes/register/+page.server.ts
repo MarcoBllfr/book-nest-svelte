@@ -8,6 +8,11 @@ interface RegisterReturnObject {
   name:string;
   errors: string[];
 }
+
+interface UserObj {
+
+}
+
 export const actions = {
   default: async ({ request, locals:{supabase} }) => {
     const formData = await request.formData();
@@ -58,6 +63,15 @@ export const actions = {
         returnObject.success=false;
         return fail(400, returnObject as any)
      }
+     
+     await supabase.from('user_names').insert([
+      {
+        user_id: data.user.id,
+        name,
+     }
+    ]);
+
+
      redirect(303,"/private/dashboard");
   },
 };
