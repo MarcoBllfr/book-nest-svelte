@@ -8,7 +8,7 @@ interface UserStateProps {
   supabase: SupabaseClient | null;
   user: User | null;
 }
-interface Book {
+export interface Book {
   author: string | null;
   cover_image: string | null;
   created_at: string;
