@@ -14,6 +14,16 @@
   function goBack() {
     history.back();
   }
+
+  let isEditMod = $state(false);
+  function toggleEditMode() {
+    isEditMod = !isEditMod;
+  }
+
+  let title = $state(book.title);
+  let author = $state(book.author);
+  let description = $state(book.description || "");
+  let genre=$state(book.genre || "");
 </script>
 
 {#snippet bookInfo()}
@@ -52,13 +62,53 @@
     <p>{book.genre}</p>
   {/if}
 {/snippet}
+
+{#snippet editField()}
+    <form>
+      <input class="input input-title mt-m mb-xs" bind:value={title} type="text" name="title" />
+      <div class="input-author">
+        <p>by </p>
+        <input class="input" bind:value={author} type="text" name="author" />
+      </div>
+      <h4 class="mt-m mb-xs semi-bold">
+        Your Rating <StarRating value={book.rating || 0} />
+      </h4>
+      <p class="small-font">
+        click to {book.rating ? "change" : "give"}
+      </p>
+      <h4 class="mt-m mb-xs semi-bold">Description</h4>
+      <textarea class="textarea mb-m" name="description" bind:value={description} placeholder="Give a description"></textarea>
+      {#if !book.finished_reading_on}
+      <Button
+        isSecondary={true}
+        onclick={() => console.log("updation reading status")}
+      >
+        {book.started_reading_on
+          ? "I finished reading this book"
+          : "I started reading book"}
+      </Button>
+    {/if}
+    <h4 class="mt-m mb-xs semi-bold">Genre</h4>
+    <input class="input" bind:value={genre} type="text" name="genre" />
+    </form>
+{/snippet}
+
 <div class="book-page">
   <button onclick={goBack} aria-label="Go Back">
     <Icon icon="ep:back" width={"40"} />
   </button>
   <div class="book-container">
     <div class="book-info">
-      {@render bookInfo()}
+      {#if isEditMod}
+        {@render editField()}
+        {:else}
+        {@render bookInfo()}
+      {/if}
+      <div class="buttons-container mt-m">
+
+        <Button isSecondary={true} onclick={toggleEditMode}>{isEditMod ? "Save changes" : "Edit"}</Button>
+        <Button isDanger={true} onclick={()=> console.log("delete ")}>Delete book from library</Button>
+      </div>
     </div>
     <div class="book-cover">
       {#if book.cover_image}
@@ -89,7 +139,7 @@
     border: 1px solid black;
     border-radius: 15px;
     min-height: 400px;
-    max-width: 350px;
+    max-width: 450px;
     margin-left: 80px;
   }
   .book-cover img{
@@ -106,4 +156,26 @@
     align-items: center;
   }
   
+  .input{
+    padding: 8px 4px;
+    width: 100%;
+  }
+
+  .textarea{
+    width: 100%;
+  }
+
+  .input-title{
+    font-size: 60px;
+    font-weight: bold;
+    font-family: "EB Garamond", serif;
+  }
+  .input-author{
+    display: flex;
+    align-items: center;
+  }
+  .input-author p{
+    margin-right: 8px;
+  }
+
 </style>
