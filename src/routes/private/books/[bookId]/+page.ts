@@ -3,7 +3,7 @@ import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ parent, params }) => {
   const { supabase } = await parent();
-  const { bookId } = params;
+  const { bookId }  = params;
 
   const { data } = await supabase
     .from("books")

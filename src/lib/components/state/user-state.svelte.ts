@@ -21,6 +21,8 @@ export interface Book {
   title: string | null;
   user_id: string;
 }
+type UpdetableBookFields = Omit<Book, "id"|"user_id"|"created_at">;
+
 export class UserState {
   session = $state<Session | null>(null);
   supabase = $state<SupabaseClient<Database> | null>(null);
@@ -96,6 +98,43 @@ export class UserState {
     );
 
     return mostCommonGenre || "";
+  }
+
+ async updateBook(bookId : number, updateObject : Partial<UpdetableBookFields>){
+   if(!this.supabase){
+    return
+   }
+   const {status,error} = await this.supabase.from("books").update(updateObject).eq("id", bookId);
+
+   if(status === 204 && !error){
+    this.allBooks = this.allBooks.map((book)=> {
+      if(book.id === bookId){
+        return{...book,...updateObject};
+      }else{
+        return book;
+      }
+    });
+   }
+  };
+
+  getBookById(bookId:number) {
+  return this.allBooks.find(book => book.id === bookId)
+  }
+
+  async uploadBookCover(file: File, bookId:number){
+    if(!this.user || !this.supabase){
+      return;
+    }
+    //file path è usato da supabase .upload per inirizzare alla sua cartella dell'user autenticato
+    //file path is used by supabase .upload to inject to its authenticated user folder
+    const filePath = `${this.user.id}/${new Date().getTime()}_${file.name}`;
+    console.log("file path", filePath);
+    const {error: uploadError} = await this.supabase.storage.from("book-covers").upload(filePath, file);
+    if(uploadError){
+      return console.log(uploadError);
+    }
+   const {data} = this.supabase.storage.from("book-covers").getPublicUrl(filePath);
+  await this.updateBook(bookId,{cover_image: data.publicUrl});
   }
 
   async logout() {
