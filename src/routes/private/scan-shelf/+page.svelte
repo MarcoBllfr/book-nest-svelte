@@ -1,19 +1,17 @@
 <script lang="ts">
   import Button from "$components/Button.svelte";
+  import { getUserState, type AiBook } from "$components/state/user-state.svelte";
   import { convertFileToBase64 } from "$lib/utils/openai-helpers";
   import Icon from "@iconify/svelte";
   import Dropzone from "svelte-file-dropzone";
-  interface AiBook {
-    author: string;
-    bookTitle: string;
-    vol?: string;
-  }
+ 
 
   //state section
   let errorMessage = $state("");
   let isLoading = $state(false);
   let recognizeBooks = $state<AiBook[]>([]);
   let booksSuccessfullyAdded=$state(false);
+  let userContext = getUserState();
   //
   async function handeDrop(e: CustomEvent<any>) {
     const { acceptedFiles } = e.detail;
@@ -49,9 +47,22 @@
     } else {
       errorMessage = "Could not upload the file";
     }
+    console.log(recognizeBooks);
   }
 
-
+function removeBook(index:number){
+  recognizeBooks.splice(index,1);
+}
+async function addAllBooks() {
+  isLoading=true;
+  try{
+    await userContext.addBooksToLibrary(recognizeBooks);
+    isLoading=false;
+    booksSuccessfullyAdded=true;
+  }catch(error:any){
+    errorMessage= error.message;
+  }
+}
 </script>
 
 <h2 class="mt-m mb-l">Take a picture to add books</h2>
@@ -105,7 +116,7 @@
                 type="button"
                 aria-label="Remove book"
                 class="remove-book"
-                onclick={() => console.log(`delete book with index ${i}`)}
+                onclick={()=>removeBook(i)}
               >
                 <Icon icon="streamline:delete-1-solid" width={"24"} />
               </button></td
@@ -114,7 +125,7 @@
         {/each}
       </tbody>
     </table>
-    <Button onclick={()=> console.log("Add books")}>Add/save</Button>
+    <Button onclick={addAllBooks}>Add/save</Button>
   </div>
 {:else}
 <h4>The selected {recognizeBooks.length} books have been added</h4>

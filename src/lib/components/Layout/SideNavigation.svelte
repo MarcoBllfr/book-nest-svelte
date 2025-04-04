@@ -17,7 +17,7 @@
         </li>
 
         <li>
-            <a href="/privat/settings">
+            <a href="/private/settings">
                 <Icon icon="ion:settings-outline" width={"40"} />
             </a>
         </li>

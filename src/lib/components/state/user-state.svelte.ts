@@ -21,6 +21,11 @@ export interface Book {
   title: string | null;
   user_id: string;
 }
+export  interface AiBook {
+  author: string;
+  bookTitle: string;
+  vol?: string;
+}
 type UpdetableBookFields = Omit<Book, "id"|"user_id"|"created_at">;
 
 export class UserState {
@@ -146,6 +151,29 @@ export class UserState {
       this.allBooks = this.allBooks.filter((book) => book.id !== bookId);
     }
   goto("/private/dashboard");
+  }
+
+  async addBooksToLibrary(booksToAdd: AiBook[]){
+    if(!this.supabase|| !this.user){
+      return;
+    }
+    const userId=this.user.id;
+    const processedBooks = booksToAdd.map(book=>({
+      title:book.vol ? `${book.bookTitle} - Vol. ${book.vol}` : book.bookTitle,
+      author:book.author,
+      user_id:userId,
+    }));
+   const {error} = await this.supabase.from("books").insert(processedBooks)
+    if(error){
+      throw new Error(error.message);
+    }else{
+    const{data} = await this.supabase.from("books").select("*").eq("user_id",userId)
+    if(!data){
+      throw new Error("could not retrive all books from this user");
+    }
+    this.allBooks = data;
+  }
+
   }
 
   async logout() {
