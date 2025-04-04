@@ -22,19 +22,36 @@
       </p>
     </div>
   </div>
+ {#if allBooks.length}
+ {#if userContext.getHighestRatedBooks().length}
+ <BookCategory 
+ bookToDisplay={userContext.getHighestRatedBooks()} 
+ categoryName={"Your favorite books"}
+ />
+ {/if}
 
-  <BookCategory 
-  bookToDisplay={userContext.getHighestRatedBooks()} 
-  categoryName={"Your favorite books"}
-  />
-  <BookCategory 
-  bookToDisplay={userContext.getUnreadBooks()} 
-  categoryName={"Recently added, unread books"}
-  />
-  <BookCategory 
-  bookToDisplay={allBooks.slice(0,10)} 
-  categoryName={`Highest rated books from your favorite genre: ${userContext.getFavoriteGenre()}`}
-  />
+ <BookCategory 
+ bookToDisplay={userContext.getUnreadBooks()} 
+ categoryName={"Recently added, unread books"}
+ />
+ {#if userContext.getFavoriteGenre()}
+       <BookCategory
+       bookToDisplay={userContext.getBooksFromFavoriteGenre()}
+         categoryName={`Highest rated books from your favorite genre: ${userContext.getFavoriteGenre()}`}
+       />
+     {/if}
+ {:else}
+ <div class="upload-hint">
+  <a href="/private/scan-shelf" class="upload-hint mt-l">
+    <h3>You have no book in your library. Click here to add</h3>
+    <div class="mt-m">
+      <Icon icon="icons8:plus" width={"72"} height={"72"} />
+      <p>Add books</p>
+    </div>
+  </a>
+ </div>
+ {/if}
+ 
  
 </div>
 
@@ -59,5 +76,18 @@
     text-align: right;
     max-width: 30%;
     min-width: 300px;
+  }
+  .upload-hint{
+    display: flex;
+    text-decoration: none;
+    width:100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .upload-hint div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

@@ -20,8 +20,23 @@
         if(userContex.userName){
             userName=userContex.userName;
         }
-    })
+    });
+    async function toggleEditMode(){
+        if(isEditMode)[
+            await userContex.updateAccountData(email, userName)
+        ]
+        isEditMode = !isEditMode;
+    }
+    async function deleteAccount() {
+        const confirmDelete = window.confirm(
+            "Are you sure you want delete your account? this action is irreversible"
+        )
+        if(confirmDelete){
+            await userContex.deleteAccount();
+        }
+    }
 </script>
+
 <div class="settings-page">
     <div class="settings-container">
         <h2>Settings</h2>
@@ -38,10 +53,10 @@
         <h3>{email}</h3>
         {/if}
         <div class="buttons-container mt-l">
-            <Button isSecondary={true} onclick={()=> console.log("go to edit")}>
+            <Button isSecondary={true} onclick={toggleEditMode}>
                 {isEditMode? "Save changes" : "Edit"}
             </Button>
-            <Button isDanger={true} onclick={()=> console.log("Delete account")}>
+            <Button isDanger={true} onclick={deleteAccount}>
                 Delete account
             </Button>
         </div>
@@ -55,3 +70,24 @@
         <h3>{avgRating}</h3>
     </div>
 </div>
+<style>
+    .settings-page{
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .settings-container{
+        margin-right: 80px;
+    }
+    .settings-container input{
+        width: 100%;
+    }
+    .stats-container{
+        min-width: 25%;
+        border-radius: 12px;
+        padding: 8px 24px;
+        background-color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 40px;
+    }
+</style>
