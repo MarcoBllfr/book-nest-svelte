@@ -91,41 +91,31 @@ export const POST: RequestHandler = async ({ request }) => {
              console.error("Error parsing JSON:", error);
              bookArrayToParse = []; 
          }
-         */
+         
   //usare in caso di raggiungimento limite richieste IA
-  
+  */
   const bookArrayToParse = [
     {
-        "bookTitle": "Berserk Collection",
-        "vol": "1",
+        "bookTitle": "Barbascura X Saggio erotico sulla fine del mondo",
+        "vol": null,
+        "author": "Barbascura X"
+    },
+    {
+        "bookTitle": "Berserk",
+        "vol": null,
         "author": "Kentaro Miura"
     },
     {
-        "bookTitle": "Berserk Collection",
-        "vol": "2",
-        "author": "Kentaro Miura"
-    },
-    {
-        "bookTitle": "Berserk Collection",
-        "vol": "3",
-        "author": "Kentaro Miura"
-    },
-    {
-        "bookTitle": "Berserk Collection",
-        "vol": "4",
+        "bookTitle": "Berserk",
+        "vol": "5",
         "author": "Kentaro Miura"
     },
     {
         "bookTitle": "Berserk",
         "vol": "6",
         "author": "Kentaro Miura"
-    },
-    {
-        "bookTitle": "The Goldfinch",
-        "vol": null,
-        "author": "Donna Tartt"
     }
-  ];
+];
   
         return json({ bookArrayToParse });
     } catch (error) {

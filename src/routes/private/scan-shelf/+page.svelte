@@ -66,6 +66,9 @@ async function addAllBooks() {
 </script>
 
 <h2 class="mt-m mb-l">Take a picture to add books</h2>
+<h3 class="mt-m mb-l important-note">
+  Ho inserito una risposta standard dei libri, dato l'uso limitato di chiamate IA
+</h3>
 {#if recognizeBooks.length === 0}
   <div class="upload-area">
     <div class="upload-container">
